@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://nopolluted1.github.io</id>
     <title>Gridea</title>
-    <updated>2023-10-17T05:01:32.309Z</updated>
+    <updated>2023-10-17T05:10:59.805Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://nopolluted1.github.io"/>
     <link rel="self" href="https://nopolluted1.github.io/atom.xml"/>
@@ -11,7 +11,206 @@
     <icon>https://nopolluted1.github.io/favicon.ico</icon>
     <rights>All rights reserved 2023, Gridea</rights>
     <entry>
-        <title type="html"><![CDATA[队列]]></title>
+        <title type="html"><![CDATA[队列s]]></title>
+        <id>https://nopolluted1.github.io/post/dui-lie-s/</id>
+        <link href="https://nopolluted1.github.io/post/dui-lie-s/">
+        </link>
+        <updated>2023-10-17T05:05:17.000Z</updated>
+        <content type="html"><![CDATA[<h4 id="一基础">一.基础</h4>
+<p>特点：先入先出，后入后出</p>
+<p>方法：</p>
+<p>​        1、创建队列对象。例如：ArrayDeque、LinkedList等。</p>
+<p>2、入队操作。将元素添加到队列的末尾处，使用offer()方法。</p>
+<p>3、出队操作。从队列的头部移除并返回元素，使用poll()方法。</p>
+<p>4、peek()方法：查看队首元素。如果队列为空，则返回null。</p>
+<p>5、isEmpty()方法。用于判断队列是否为空，空则返回true。</p>
+<p>6、获取队列的大小，采用size()方法。</p>
+<p>7、清除队列内的元素，采用clear()方法。</p>
+<h4 id="二链表实现单向环形带哨兵">二.链表实现（单向环形带哨兵）</h4>
+<ol>
+<li>队列初始化，<code>head</code> 和 <code>tail</code>都指向同一个 <code>初始化节点</code>，如果有元素入队列，移动 <code>tail</code> 指针即可</li>
+</ol>
+<img src="C:\Users\明天会更好\AppData\Roaming\Typora\typora-user-images\image-20231017114455247.png" style="zoom: 80%;" />
+<pre><code class="language-java">import java.util.Iterator;
+import java.util.Queue;
+
+public class LinkedListQueue&lt;E&gt; implements Iterable&lt;E&gt;{
+        private static class Node&lt;E&gt; {
+            E value;
+            Node&lt;E&gt; next;
+
+            public Node(E value, Node&lt;E&gt; next) {
+                this.value = value;
+                this.next = next;
+            }
+        }
+
+        Node&lt;E&gt; head = new Node&lt;&gt;(null, null);
+        Node&lt;E&gt; tail = head;
+        private int size;                  //节点数
+        private int capacity = Integer.MAX_VALUE;
+
+        public LinkedListQueue(int capacity) {
+            this.capacity = capacity;
+            tail.next = head;
+        }
+
+        public LinkedListQueue() {
+            tail.next = head;
+        }
+
+        public boolean offer(E value){
+            if(isFull()){
+                return false;
+            }
+            Node&lt;E&gt; added = new Node&lt;&gt;(value, head);
+            tail.next = added;
+            tail = added;
+            size++;
+            return true;
+        }
+
+        public E poll(){
+            if(isEmpty()){
+                return null;
+            }
+            Node&lt;E&gt; first = head.next;
+            head.next = first.next;
+            if(first == tail){
+                tail = head;
+            }
+            size--;
+            return first.value;
+        }
+
+        public E peek(){
+            if(isEmpty()){
+                return null;
+            }
+            return head.next.value;
+        }
+
+        public boolean isEmpty(){
+            if(head.next == null){
+                return true;
+            }
+            return false;
+        }
+
+        public boolean isFull(){
+            return size == capacity;
+//          return tail + 1 == head;
+        }
+
+        public Iterator&lt;E&gt; iterator(){
+            return new Iterator&lt;E&gt;() {
+                Node&lt;E&gt; p = head.next;                         //设置指针遍历
+                @Override
+                public boolean hasNext() {
+                    return p != head;                 //循环结束条件
+                }
+
+                @Override
+                public E next() {
+                    E value = p.value;
+                    p = p.next;
+                    return value;
+                }
+            };
+        }
+    }
+</code></pre>
+<h4 id="三环形数组实现">三.环形数组实现</h4>
+<ol>
+<li>
+<p>定义head，tail两个指针</p>
+</li>
+<li>
+<p>head指针指向头一个元素</p>
+</li>
+<li>
+<p>tail指针指向最后一个元素的下一个位置，也就是待插入的位置</p>
+</li>
+<li>
+<p>初始时，head和tail共同指向第一个位置</p>
+</li>
+<li>
+<p>判断队满：（tail + 1）% length == head</p>
+</li>
+<li>
+<p>判断队空：head == tail</p>
+<pre><code class="language-java">import java.util.Iterator;
+
+public class ArrayQueue1&lt;E&gt; implements Iterable&lt;E&gt;  {
+    private E[] array;
+    private int head = 0;
+    private int tail = 0;
+    private int capacity;
+
+    @SuppressWarnings(&quot;all&quot;)
+    public ArrayQueue1(int capacity) {
+        array = (E[]) new Object[capacity + 1];
+    }
+
+    public boolean offer(E value){
+        if(isFull()){
+            return false;
+        }
+        array[tail] = value;
+        tail = (tail + 1) % array.length;
+        return true;
+    }
+
+    public E poll(){
+        if(isEmpty()){
+            return null;
+        }
+        E value = array[head];
+        head = (head + 1) % array.length;
+        return value;
+    }
+
+    public E peek(){
+        if(isEmpty()){
+            return null;
+        }
+        return array[head];
+    }
+
+    public boolean isEmpty(){
+        return head == tail;
+    }
+
+    public boolean isFull(){
+        return (tail + 1) % array.length == head;
+    }
+
+    public Iterator&lt;E&gt; iterator(){
+        return new Iterator&lt;E&gt;() {
+            int p = head;                         //设置指针遍历
+            @Override
+            public boolean hasNext() {
+                return p != tail;                 //循环结束条件
+            }
+
+            @Override
+            public E next() {
+                E value = array[p];
+                p = (p + 1) % array.length;
+                return value;
+            }
+        };  
+    }
+}
+
+</code></pre>
+</li>
+</ol>
+<h4 id="四二叉树实现">四.二叉树实现</h4>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[栈]]></title>
         <id>https://nopolluted1.github.io/post/dui-lie/</id>
         <link href="https://nopolluted1.github.io/post/dui-lie/">
         </link>

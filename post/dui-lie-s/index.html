@@ -1,0 +1,378 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>队列s | Gridea</title>
+<link rel="shortcut icon" href="https://nopolluted1.github.io/favicon.ico?v=1697519453513">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://nopolluted1.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="队列s | Gridea - Atom Feed" href="https://nopolluted1.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+
+    <meta name="description" content="一.基础
+特点：先入先出，后入后出
+方法：
+​        1、创建队列对象。例如：ArrayDeque、LinkedList等。
+2、入队操作。将元素添加到队列的末尾处，使用offer()方法。
+3、出队操作。从队列的头部移除并返回元素..." />
+    <meta name="keywords" content="" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://nopolluted1.github.io">
+  <img class="avatar" src="https://nopolluted1.github.io/images/avatar.png?v=1697519453513" alt="">
+  </a>
+  <h1 class="site-title">
+    Gridea
+  </h1>
+  <p class="site-description">
+    温故而知新
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          归档
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          标签
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              队列s
+            </h2>
+            <div class="post-info">
+              <span>
+                2023-10-17
+              </span>
+              <span>
+                4 min read
+              </span>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content">
+                <h4 id="一基础">一.基础</h4>
+<p>特点：先入先出，后入后出</p>
+<p>方法：</p>
+<p>​        1、创建队列对象。例如：ArrayDeque、LinkedList等。</p>
+<p>2、入队操作。将元素添加到队列的末尾处，使用offer()方法。</p>
+<p>3、出队操作。从队列的头部移除并返回元素，使用poll()方法。</p>
+<p>4、peek()方法：查看队首元素。如果队列为空，则返回null。</p>
+<p>5、isEmpty()方法。用于判断队列是否为空，空则返回true。</p>
+<p>6、获取队列的大小，采用size()方法。</p>
+<p>7、清除队列内的元素，采用clear()方法。</p>
+<h4 id="二链表实现单向环形带哨兵">二.链表实现（单向环形带哨兵）</h4>
+<ol>
+<li>队列初始化，<code>head</code> 和 <code>tail</code>都指向同一个 <code>初始化节点</code>，如果有元素入队列，移动 <code>tail</code> 指针即可</li>
+</ol>
+<img src="C:\Users\明天会更好\AppData\Roaming\Typora\typora-user-images\image-20231017114455247.png" style="zoom: 80%;" />
+<pre><code class="language-java">import java.util.Iterator;
+import java.util.Queue;
+
+public class LinkedListQueue&lt;E&gt; implements Iterable&lt;E&gt;{
+        private static class Node&lt;E&gt; {
+            E value;
+            Node&lt;E&gt; next;
+
+            public Node(E value, Node&lt;E&gt; next) {
+                this.value = value;
+                this.next = next;
+            }
+        }
+
+        Node&lt;E&gt; head = new Node&lt;&gt;(null, null);
+        Node&lt;E&gt; tail = head;
+        private int size;                  //节点数
+        private int capacity = Integer.MAX_VALUE;
+
+        public LinkedListQueue(int capacity) {
+            this.capacity = capacity;
+            tail.next = head;
+        }
+
+        public LinkedListQueue() {
+            tail.next = head;
+        }
+
+        public boolean offer(E value){
+            if(isFull()){
+                return false;
+            }
+            Node&lt;E&gt; added = new Node&lt;&gt;(value, head);
+            tail.next = added;
+            tail = added;
+            size++;
+            return true;
+        }
+
+        public E poll(){
+            if(isEmpty()){
+                return null;
+            }
+            Node&lt;E&gt; first = head.next;
+            head.next = first.next;
+            if(first == tail){
+                tail = head;
+            }
+            size--;
+            return first.value;
+        }
+
+        public E peek(){
+            if(isEmpty()){
+                return null;
+            }
+            return head.next.value;
+        }
+
+        public boolean isEmpty(){
+            if(head.next == null){
+                return true;
+            }
+            return false;
+        }
+
+        public boolean isFull(){
+            return size == capacity;
+//          return tail + 1 == head;
+        }
+
+        public Iterator&lt;E&gt; iterator(){
+            return new Iterator&lt;E&gt;() {
+                Node&lt;E&gt; p = head.next;                         //设置指针遍历
+                @Override
+                public boolean hasNext() {
+                    return p != head;                 //循环结束条件
+                }
+
+                @Override
+                public E next() {
+                    E value = p.value;
+                    p = p.next;
+                    return value;
+                }
+            };
+        }
+    }
+</code></pre>
+<h4 id="三环形数组实现">三.环形数组实现</h4>
+<ol>
+<li>
+<p>定义head，tail两个指针</p>
+</li>
+<li>
+<p>head指针指向头一个元素</p>
+</li>
+<li>
+<p>tail指针指向最后一个元素的下一个位置，也就是待插入的位置</p>
+</li>
+<li>
+<p>初始时，head和tail共同指向第一个位置</p>
+</li>
+<li>
+<p>判断队满：（tail + 1）% length == head</p>
+</li>
+<li>
+<p>判断队空：head == tail</p>
+<pre><code class="language-java">import java.util.Iterator;
+
+public class ArrayQueue1&lt;E&gt; implements Iterable&lt;E&gt;  {
+    private E[] array;
+    private int head = 0;
+    private int tail = 0;
+    private int capacity;
+
+    @SuppressWarnings(&quot;all&quot;)
+    public ArrayQueue1(int capacity) {
+        array = (E[]) new Object[capacity + 1];
+    }
+
+    public boolean offer(E value){
+        if(isFull()){
+            return false;
+        }
+        array[tail] = value;
+        tail = (tail + 1) % array.length;
+        return true;
+    }
+
+    public E poll(){
+        if(isEmpty()){
+            return null;
+        }
+        E value = array[head];
+        head = (head + 1) % array.length;
+        return value;
+    }
+
+    public E peek(){
+        if(isEmpty()){
+            return null;
+        }
+        return array[head];
+    }
+
+    public boolean isEmpty(){
+        return head == tail;
+    }
+
+    public boolean isFull(){
+        return (tail + 1) % array.length == head;
+    }
+
+    public Iterator&lt;E&gt; iterator(){
+        return new Iterator&lt;E&gt;() {
+            int p = head;                         //设置指针遍历
+            @Override
+            public boolean hasNext() {
+                return p != tail;                 //循环结束条件
+            }
+
+            @Override
+            public E next() {
+                E value = array[p];
+                p = (p + 1) % array.length;
+                return value;
+            }
+        };  
+    }
+}
+
+</code></pre>
+</li>
+</ol>
+<h4 id="四二叉树实现">四.二叉树实现</h4>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li>
+<ul>
+<li>
+<ul>
+<li><a href="#%E4%B8%80%E5%9F%BA%E7%A1%80">一.基础</a></li>
+<li><a href="#%E4%BA%8C%E9%93%BE%E8%A1%A8%E5%AE%9E%E7%8E%B0%E5%8D%95%E5%90%91%E7%8E%AF%E5%BD%A2%E5%B8%A6%E5%93%A8%E5%85%B5">二.链表实现（单向环形带哨兵）</a></li>
+<li><a href="#%E4%B8%89%E7%8E%AF%E5%BD%A2%E6%95%B0%E7%BB%84%E5%AE%9E%E7%8E%B0">三.环形数组实现</a></li>
+<li><a href="#%E5%9B%9B%E4%BA%8C%E5%8F%89%E6%A0%91%E5%AE%9E%E7%8E%B0">四.二叉树实现</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://nopolluted1.github.io/post/dui-lie/">
+              <h3 class="post-title">
+                栈
+              </h3>
+            </a>
+          </div>
+        
+
+        
+
+        <div class="site-footer">
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
+  <a class="rss" href="https://nopolluted1.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>
