@@ -2,24 +2,24 @@
   <head>
     <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Hello Gridea | Gridea</title>
+<title>队列 | Gridea</title>
 <link rel="shortcut icon" href="https://nopolluted1.github.io/favicon.ico?v=1697518873709">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="https://nopolluted1.github.io/styles/main.css">
-<link rel="alternate" type="application/atom+xml" title="Hello Gridea | Gridea - Atom Feed" href="https://nopolluted1.github.io/atom.xml">
+<link rel="alternate" type="application/atom+xml" title="队列 | Gridea - Atom Feed" href="https://nopolluted1.github.io/atom.xml">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
 
 
 
-    <meta name="description" content="👏  欢迎使用 Gridea ！
-✍️  Gridea 一个静态博客写作客户端。你可以用它来记录你的生活、心情、知识、笔记、创意... ...
+    <meta name="description" content="一、基础
+二、数组实现
+三、链表实现
+import java.util.Stack;
+import java.util.Iterator;
 
-Github
-Gridea 主页
-示例网站
-特性👇
-📝  你可以使用最酷的 Markdo..." />
-    <meta name="keywords" content="Gridea" />
+
+public class LinkedListStack&lt;E&gt; implements..." />
+    <meta name="keywords" content="" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
     <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
   </head>
@@ -81,54 +81,118 @@ Gridea 主页
         <div class="post-detail">
           <article class="post">
             <h2 class="post-title">
-              Hello Gridea
+              队列
             </h2>
             <div class="post-info">
               <span>
-                2018-12-12
+                2023-10-17
               </span>
               <span>
                 2 min read
               </span>
               
-                <a href="https://nopolluted1.github.io/tag/doiXcSsyc/" class="post-tag">
-                  # Gridea
-                </a>
-              
             </div>
-            
-              <img class="post-feature-image" src="https://nopolluted1.github.io/post-images/hello-gridea.png" alt="">
             
             <div class="post-content-wrapper">
               <div class="post-content">
-                <p>👏  欢迎使用 <strong>Gridea</strong> ！<br>
-✍️  <strong>Gridea</strong> 一个静态博客写作客户端。你可以用它来记录你的生活、心情、知识、笔记、创意... ...</p>
-<!-- more -->
-<p><a href="https://github.com/getgridea/gridea">Github</a><br>
-<a href="https://gridea.dev/">Gridea 主页</a><br>
-<a href="http://fehey.com/">示例网站</a></p>
-<h2 id="特性">特性👇</h2>
-<p>📝  你可以使用最酷的 <strong>Markdown</strong> 语法，进行快速创作</p>
-<p>🌉  你可以给文章配上精美的封面图和在文章任意位置插入图片</p>
-<p>🏷️  你可以对文章进行标签分组</p>
-<p>📋  你可以自定义菜单，甚至可以创建外部链接菜单</p>
-<p>💻  你可以在 <strong>Windows</strong>，<strong>MacOS</strong> 或 <strong>Linux</strong> 设备上使用此客户端</p>
-<p>🌎  你可以使用 <strong>𝖦𝗂𝗍𝗁𝗎𝖻 𝖯𝖺𝗀𝖾𝗌</strong> 或 <strong>Coding Pages</strong> 向世界展示，未来将支持更多平台</p>
-<p>💬  你可以进行简单的配置，接入 <a href="https://github.com/gitalk/gitalk">Gitalk</a> 或 <a href="https://github.com/SukkaW/DisqusJS">DisqusJS</a> 评论系统</p>
-<p>🇬🇧  你可以使用<strong>中文简体</strong>或<strong>英语</strong></p>
-<p>🌁  你可以任意使用应用内默认主题或任意第三方主题，强大的主题自定义能力</p>
-<p>🖥  你可以自定义源文件夹，利用 OneDrive、百度网盘、iCloud、Dropbox 等进行多设备同步</p>
-<p>🌱 当然 <strong>Gridea</strong> 还很年轻，有很多不足，但请相信，它会不停向前 🏃</p>
-<p>未来，它一定会成为你离不开的伙伴</p>
-<p>尽情发挥你的才华吧！</p>
-<p>😘 Enjoy~</p>
+                <h4 id="一-基础">一、基础</h4>
+<h4 id="二-数组实现">二、数组实现</h4>
+<h4 id="三-链表实现">三、链表实现</h4>
+<pre><code>import java.util.Stack;
+import java.util.Iterator;
+
+
+public class LinkedListStack&lt;E&gt; implements Iterable&lt;E&gt; {
+
+    static class Node&lt;E&gt;{
+        E value;
+        Node&lt;E&gt; next;
+
+        public Node(E value, Node&lt;E&gt; next) {
+            this.value = value;
+            this.next = next;
+        }
+    }
+    
+    private int capacity;
+    private int size;
+    private Node&lt;E&gt; head = new Node&lt;E&gt;(null, null);
+
+    public LinkedListStack(int capacity) {
+        this.capacity = capacity;
+    }
+    
+    public boolean push(E value) {
+        if (isFull()) {
+            return false;
+        }
+        head.next = new Node&lt;&gt;(value, head.next);
+        size++;
+        return true;
+    }
+
+    public E pop() {
+        if (isEmpty()) {
+            return null;
+        }
+        Node&lt;E&gt; first = head.next;
+        head.next = first.next;
+        size--;
+        return first.value;
+    }
+
+    public E peek() {
+        if (isEmpty()) {
+            return null;
+        }
+        Node&lt;E&gt; first = head.next;
+        return first.value;
+    }
+    
+    public boolean isEmpty() {
+        return size == 0;
+    }
+
+    public boolean isFull() {
+        return size == capacity;
+    }
+
+    @Override
+    public Iterator&lt;E&gt; iterator() {
+        return new Iterator&lt;E&gt;() {
+            Node&lt;E&gt; p = head.next;
+            @Override
+            public boolean hasNext() {
+                return p != null;
+            }
+
+            @Override
+            public E next() {
+                E value = p.value;
+                p = p.next;
+                return value;
+            }
+        };
+    }
+}
+</code></pre>
 
               </div>
               <div class="toc-container">
                 <ul class="markdownIt-TOC">
 <li>
 <ul>
-<li><a href="#%E7%89%B9%E6%80%A7">特性👇</a></li>
+<li>
+<ul>
+<li>
+<ul>
+<li><a href="#%E4%B8%80-%E5%9F%BA%E7%A1%80">一、基础</a></li>
+<li><a href="#%E4%BA%8C-%E6%95%B0%E7%BB%84%E5%AE%9E%E7%8E%B0">二、数组实现</a></li>
+<li><a href="#%E4%B8%89-%E9%93%BE%E8%A1%A8%E5%AE%9E%E7%8E%B0">三、链表实现</a></li>
+</ul>
+</li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -138,6 +202,15 @@ Gridea 主页
           </article>
         </div>
 
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://nopolluted1.github.io/post/sadas/">
+              <h3 class="post-title">
+                Hello World
+              </h3>
+            </a>
+          </div>
         
 
         
