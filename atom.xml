@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://nopolluted1.github.io</id>
     <title>Gridea</title>
-    <updated>2023-10-27T10:42:42.849Z</updated>
+    <updated>2023-10-27T11:14:15.625Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://nopolluted1.github.io"/>
     <link rel="self" href="https://nopolluted1.github.io/atom.xml"/>
@@ -28,10 +28,9 @@
 <p>7、清除队列内的元素，采用clear()方法。</p>
 <h4 id="二链表实现单向环形带哨兵">二.链表实现（单向环形带哨兵）</h4>
 <ol>
-<li>队列初始化，<code>head</code> 和 <code>tail</code>都指向同一个 <code>初始化节点</code>，如果有元素入队列，移动 <code>tail</code> 指针即可<br>
-<img src="https://github.com/nopolluted1/nopolluted1.github.io/blob/main/images/image-20231017114455247.png?raw=true" alt="图一" loading="lazy"></li>
+<li>队列初始化，<code>head</code> 和 <code>tail</code>都指向同一个 <code>初始化节点</code>，如果有元素入队列，移动 <code>tail</code> 指针即可</li>
 </ol>
-<img src="https://github.com/nopolluted1/nopolluted1.github.io/blob/main/images/image-20231017114455247.png?raw=true" referrerpolicy="no-referrer" style="zoom: 80%;" />
+<img src="https://img-blog.csdnimg.cn/1d3f8eb758544bf8b6fa8b2286f95517.png" referrerpolicy="no-referrer" style="zoom: 80%;" />
 <pre><code class="language-java">import java.util.Iterator;
 import java.util.Queue;
 
