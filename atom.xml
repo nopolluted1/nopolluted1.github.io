@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://nopolluted1.github.io</id>
     <title>Gridea</title>
-    <updated>2023-10-27T11:15:39.865Z</updated>
+    <updated>2023-11-01T03:43:49.013Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://nopolluted1.github.io"/>
     <link rel="self" href="https://nopolluted1.github.io/atom.xml"/>
@@ -10,6 +10,133 @@
     <logo>https://nopolluted1.github.io/images/avatar.png</logo>
     <icon>https://nopolluted1.github.io/favicon.ico</icon>
     <rights>All rights reserved 2023, Gridea</rights>
+    <entry>
+        <title type="html"><![CDATA[二叉树的两种遍历方式]]></title>
+        <id>https://nopolluted1.github.io/post/er-cha-shu-de-liang-chong-bian-li-fang-shi/</id>
+        <link href="https://nopolluted1.github.io/post/er-cha-shu-de-liang-chong-bian-li-fang-shi/">
+        </link>
+        <updated>2023-11-01T03:42:42.000Z</updated>
+        <content type="html"><![CDATA[<h3 id="一-创建树类">一.  创建树类</h3>
+<pre><code class="language-java">public class TreeNode {
+    public int val;
+    public TreeNode left;
+    public TreeNode right;
+
+    public TreeNode(int val) {
+        this.val = val;
+    }
+
+    public TreeNode(TreeNode left, int val, TreeNode right) {
+        this.val = val;
+        this.left = left;
+        this.right = right;
+    }
+
+    @Override
+    public String toString() {
+        return &quot;TreeNode{&quot; +
+                &quot;val=&quot; + val +
+                &quot;, left=&quot; + left +
+                &quot;, right=&quot; + right +
+                '}';
+    }
+}
+</code></pre>
+<h3 id="二-递归遍历">二. 递归遍历</h3>
+<pre><code class="language-java">//递归遍历 二叉树 （前序、中序、后序）
+//                            1                                      // 前序： 1 2 4 3 5 6
+//                      2            3                               // 中序： 4 2 1 5 3 6
+//                  4             5     6                            // 后序： 4 2 5 6 3 1
+
+public class BinaryTree1 {
+
+    public static void main(String[] args) {
+        
+        TreeNode root = new TreeNode(new TreeNode(new TreeNode(4), 2, null),
+                1,
+                new TreeNode(new TreeNode(5), 3, new TreeNode(6)));
+
+        preOrder(root);                         //测试
+        System.out.println();
+        inOrder(root);
+        System.out.println();
+        postOrder(root);
+        System.out.println();
+    }
+
+        static void preOrder (TreeNode node){
+            if (node == null) {
+                return;
+            }
+            System.out.println(node.val);
+            preOrder(node.left);
+            preOrder(node.right);
+        }
+
+        static void inOrder (TreeNode node) {
+            if (node == null) {
+                return;
+            }
+            inOrder(node.left);
+            System.out.println(node.val);
+            inOrder(node.right);
+        }
+
+        static void postOrder (TreeNode node) {
+            if (node == null) {
+                return;
+            }
+            postOrder(node.left);
+            postOrder(node.right);
+            System.out.println(node.val);
+        }
+    }
+
+</code></pre>
+<h3 id="三-非递归遍历">三. 非递归遍历</h3>
+<pre><code class="language-java">//非递归遍历 二叉树 （前序、中序、后序）
+//                            1                                      // 前序： 1 2 4 3 5 6
+//                      2            3                               // 中序： 4 2 1 5 3 6
+//                  4             5     6                            // 后序： 4 2 5 6 3 1
+
+public class BinaryTree2 {
+
+    public static void main(String[] args) {
+        
+        TreeNode root = new TreeNode(new TreeNode(new TreeNode(4), 2, null),
+                1,
+                new TreeNode(new TreeNode(5), 3, new TreeNode(6)));
+
+        TreeNode pop = null;
+        TreeNode cur = root;
+
+        LinkedListStack&lt;TreeNode&gt; stack = new LinkedListStack&lt;&gt;(8);
+
+        while (!stack.isEmpty() || cur != null) {
+            if (cur != null) {
+                stack.push(cur);
+                System.out.println(&quot;前:&quot; +  cur.val);
+                cur = cur.left;
+            } else {
+                TreeNode peek = stack.peek();
+                if (peek.right == null) {
+                    System.out.println(&quot;中:&quot; +  peek.val);
+                    pop = stack.pop();
+                    System.out.println(&quot;后:&quot; +  pop.val);
+                } else if (peek.right == pop) {
+                    pop = stack.pop();
+                    System.out.println(&quot;后:&quot; +  pop.val);
+                } else {
+                    System.out.println(&quot;中:&quot; +  peek.val);
+                    cur = peek.right;
+                }
+            }
+        }
+    }
+}
+</code></pre>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[队列]]></title>
         <id>https://nopolluted1.github.io/post/dui-lie-s/</id>
