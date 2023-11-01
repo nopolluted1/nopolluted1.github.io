@@ -1,0 +1,316 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>堆 | Gridea</title>
+<link rel="shortcut icon" href="https://nopolluted1.github.io/favicon.ico?v=1698815629707">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://nopolluted1.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="堆 | Gridea - Atom Feed" href="https://nopolluted1.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+
+    <meta name="description" content="一. 堆介绍
+只要满足以下两点，它就是一个堆：
+
+堆是一个完全二叉树。
+完全二叉树要求，除了最后一层，其他层的节点个数都是满的，最后一层的节点都靠左排列，自然堆也具有完全二叉树的所有性质。
+
+
+堆中每一个节点的值都必须大于等于（或小于等于）..." />
+    <meta name="keywords" content="" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://nopolluted1.github.io">
+  <img class="avatar" src="https://nopolluted1.github.io/images/avatar.png?v=1698815629707" alt="">
+  </a>
+  <h1 class="site-title">
+    Gridea
+  </h1>
+  <p class="site-description">
+    欢迎来到小橘子的博客
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          归档
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          标签
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              堆
+            </h2>
+            <div class="post-info">
+              <span>
+                2023-11-01
+              </span>
+              <span>
+                3 min read
+              </span>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content">
+                <h3 id="一-堆介绍">一. 堆介绍</h3>
+<p>只要满足以下两点，它就是一个堆：</p>
+<blockquote>
+<p><strong>堆是一个完全二叉树。</strong></p>
+<p>完全二叉树要求，除了最后一层，其他层的节点个数都是满的，最后一层的节点都靠左排列，自然堆也具有完全二叉树的所有性质。</p>
+</blockquote>
+<blockquote>
+<p><strong>堆中每一个节点的值都必须大于等于（或小于等于）其子树中每个节点的值。</strong></p>
+</blockquote>
+<p><strong>每个结点的值都大于或等于其左右孩子结点的值</strong>，我们叫做“大顶堆”。</p>
+<p><strong>每个结点的值都小于或等于其左右孩子结点的值</strong>，我们叫做“小顶堆”。</p>
+<h3 id="二-堆方法">二. 堆方法</h3>
+<pre><code class="language-java">public interface Heap {
+
+    boolean offer(int offered);
+
+    int poll();
+
+    int poll(int index);
+
+    int peek();
+
+    void replace(int replaced);
+
+}
+</code></pre>
+<h3 id="三-大顶堆">三. 大顶堆</h3>
+<pre><code>import java.util.Arrays;
+
+public class MaxHeap implements Heap{
+    int[] array;
+    int size;
+
+    public MaxHeap(int capacity){
+        this.array = new int[capacity];
+    }
+    
+     public MaxHeap(int[] array){
+        this.array = array;
+        this.size = array.length;
+        heapify();
+    }
+
+    private void down(int parent){                     //下潜
+        int left = parent * 2 + 1;
+        int right = left + 1;
+        int max = parent;
+        if(left &lt; size &amp;&amp; array[left] &gt; array[max]){
+            max = left;
+        }
+        if(right &lt; size &amp;&amp; array[right] &gt; array[max]){
+            max = right;
+        }
+        if(max != parent){
+            swap(max,parent);
+            down(max);
+        }
+    }
+
+    private void swap(int i, int j){                    //交换堆内节点元素
+        int t = array[i];
+        array[i] = array[j];
+        array[j] = t;
+    }
+
+    private void heapify(){                             //建堆
+        for(int i = size / 2 - 1; i &gt;= 0; i--){
+            down(i);
+        }
+    }
+
+    private void up(int offered){                       //上升
+        int child = size;
+        while (size &gt; 0){
+            int parent = (child - 1) / 2;
+            if(offered &gt; array[parent]){
+                array[child] = array[parent];
+            } else {
+                break;
+            }
+            child = parent;
+        }
+        array[child] = offered;
+    }
+
+    @Override
+    public boolean offer(int offered) {
+        if(size == array.length){
+            return false;
+        }
+        up(offered);
+        size++;
+        return true;
+    }
+
+    @Override
+    public int poll() {
+        int top = array[0];
+        swap(0, size - 1);
+        size--;
+        down(0);
+        return top;
+    }
+
+    @Override
+    public int poll(int index) {
+        int deleted = array[index];
+        swap(index, size - 1);
+        size--;
+        down(index);
+        return deleted;
+    }
+
+    @Override
+    public int peek() {
+        return array[0];
+    }
+
+    @Override
+    public void replace(int replaced) {
+        array[0] = replaced;
+        down(0);
+    }
+   
+
+    public static void main(String[] args) {                     //测试
+        int[] array = {1, 2, 3, 4, 5, 6, 7};
+        MaxHeap maxHeap = new MaxHeap(array);
+        System.out.println(Arrays.toString(maxHeap.array));
+    }
+}
+</code></pre>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li>
+<ul>
+<li><a href="#%E4%B8%80-%E5%A0%86%E4%BB%8B%E7%BB%8D">一. 堆介绍</a></li>
+<li><a href="#%E4%BA%8C-%E5%A0%86%E6%96%B9%E6%B3%95">二. 堆方法</a></li>
+<li><a href="#%E4%B8%89-%E5%A4%A7%E9%A1%B6%E5%A0%86">三. 大顶堆</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://nopolluted1.github.io/post/er-cha-shu-de-liang-chong-bian-li-fang-shi/">
+              <h3 class="post-title">
+                二叉树的两种遍历方式
+              </h3>
+            </a>
+          </div>
+        
+
+        
+
+        <div class="site-footer">
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
+  <a class="rss" href="https://nopolluted1.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>

@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://nopolluted1.github.io</id>
     <title>Gridea</title>
-    <updated>2023-11-01T05:09:38.247Z</updated>
+    <updated>2023-11-01T05:13:53.952Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://nopolluted1.github.io"/>
     <link rel="self" href="https://nopolluted1.github.io/atom.xml"/>
@@ -10,6 +10,146 @@
     <logo>https://nopolluted1.github.io/images/avatar.png</logo>
     <icon>https://nopolluted1.github.io/favicon.ico</icon>
     <rights>All rights reserved 2023, Gridea</rights>
+    <entry>
+        <title type="html"><![CDATA[堆]]></title>
+        <id>https://nopolluted1.github.io/post/dui/</id>
+        <link href="https://nopolluted1.github.io/post/dui/">
+        </link>
+        <updated>2023-11-01T05:10:04.000Z</updated>
+        <content type="html"><![CDATA[<h3 id="一-堆介绍">一. 堆介绍</h3>
+<p>只要满足以下两点，它就是一个堆：</p>
+<blockquote>
+<p><strong>堆是一个完全二叉树。</strong></p>
+<p>完全二叉树要求，除了最后一层，其他层的节点个数都是满的，最后一层的节点都靠左排列，自然堆也具有完全二叉树的所有性质。</p>
+</blockquote>
+<blockquote>
+<p><strong>堆中每一个节点的值都必须大于等于（或小于等于）其子树中每个节点的值。</strong></p>
+</blockquote>
+<p><strong>每个结点的值都大于或等于其左右孩子结点的值</strong>，我们叫做“大顶堆”。</p>
+<p><strong>每个结点的值都小于或等于其左右孩子结点的值</strong>，我们叫做“小顶堆”。</p>
+<h3 id="二-堆方法">二. 堆方法</h3>
+<pre><code class="language-java">public interface Heap {
+
+    boolean offer(int offered);
+
+    int poll();
+
+    int poll(int index);
+
+    int peek();
+
+    void replace(int replaced);
+
+}
+</code></pre>
+<h3 id="三-大顶堆">三. 大顶堆</h3>
+<pre><code>import java.util.Arrays;
+
+public class MaxHeap implements Heap{
+    int[] array;
+    int size;
+
+    public MaxHeap(int capacity){
+        this.array = new int[capacity];
+    }
+    
+     public MaxHeap(int[] array){
+        this.array = array;
+        this.size = array.length;
+        heapify();
+    }
+
+    private void down(int parent){                     //下潜
+        int left = parent * 2 + 1;
+        int right = left + 1;
+        int max = parent;
+        if(left &lt; size &amp;&amp; array[left] &gt; array[max]){
+            max = left;
+        }
+        if(right &lt; size &amp;&amp; array[right] &gt; array[max]){
+            max = right;
+        }
+        if(max != parent){
+            swap(max,parent);
+            down(max);
+        }
+    }
+
+    private void swap(int i, int j){                    //交换堆内节点元素
+        int t = array[i];
+        array[i] = array[j];
+        array[j] = t;
+    }
+
+    private void heapify(){                             //建堆
+        for(int i = size / 2 - 1; i &gt;= 0; i--){
+            down(i);
+        }
+    }
+
+    private void up(int offered){                       //上升
+        int child = size;
+        while (size &gt; 0){
+            int parent = (child - 1) / 2;
+            if(offered &gt; array[parent]){
+                array[child] = array[parent];
+            } else {
+                break;
+            }
+            child = parent;
+        }
+        array[child] = offered;
+    }
+
+    @Override
+    public boolean offer(int offered) {
+        if(size == array.length){
+            return false;
+        }
+        up(offered);
+        size++;
+        return true;
+    }
+
+    @Override
+    public int poll() {
+        int top = array[0];
+        swap(0, size - 1);
+        size--;
+        down(0);
+        return top;
+    }
+
+    @Override
+    public int poll(int index) {
+        int deleted = array[index];
+        swap(index, size - 1);
+        size--;
+        down(index);
+        return deleted;
+    }
+
+    @Override
+    public int peek() {
+        return array[0];
+    }
+
+    @Override
+    public void replace(int replaced) {
+        array[0] = replaced;
+        down(0);
+    }
+   
+
+    public static void main(String[] args) {                     //测试
+        int[] array = {1, 2, 3, 4, 5, 6, 7};
+        MaxHeap maxHeap = new MaxHeap(array);
+        System.out.println(Arrays.toString(maxHeap.array));
+    }
+}
+</code></pre>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[二叉树的两种遍历方式]]></title>
         <id>https://nopolluted1.github.io/post/er-cha-shu-de-liang-chong-bian-li-fang-shi/</id>
